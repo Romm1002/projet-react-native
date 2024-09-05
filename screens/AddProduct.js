@@ -3,6 +3,24 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 
+/**
+ * Page pour ajouter un produit.
+ *
+ * La page affiche un formulaire avec les champs suivants :
+ * - Nom
+ * - Description
+ * - Quantité
+ * - Prix
+ *
+ * Lorsque le formulaire est soumis, la fonctionnalité ajoute le produit
+ * correspondant à la base de données.
+ *
+ * Si le formulaire est vide, une alerte est affichée pour demander
+ * à l'utilisateur de remplir tous les champs.
+ *
+ * @param {object} navigation - L'objet de navigation fourni par React Navigation.
+ * @returns {React.Component} - La page d'ajout de produit.
+ */
 export default function AddProduct({ navigation }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
