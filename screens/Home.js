@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://192.168.1.102:5000/products');
+        const response = await axios.get('http://192.168.1.19:5000/items');
         setProducts(response.data);
       } catch (error) {
         console.log("Une erreur est survenue lors de la récupération des produits", error);
@@ -42,9 +42,9 @@ const HomeScreen = ({ navigation }) => {
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://192.168.1.102:5000/products/${productId}`);
+      await axios.delete(`http://192.168.1.19:5000/items/${productId}`);
       const updatedProducts = products.filter((product) => product.id !== productId);
-      setProducts(updatedProducts); // Mettre à jour les produits après suppression
+      setProducts(updatedProducts);
     } catch (error) {
       console.log("Une erreur est survenue lors de la suppression du produit", error);
     }
@@ -61,7 +61,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderProductItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Details', { productId: item.id })}
+      onPress={() => navigation.navigate('DetailsProduct', { productId: item.id })}
       style={styles.productItemButton}
     >
       <View style={styles.productItem}>
@@ -74,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
             <Button
               title="Modifier"
               onPress={() =>
-                navigation.navigate("UpdateProduct", {
+                navigation.navigate("EditProduct", {
                   productId: item.id,
                 })
               }
