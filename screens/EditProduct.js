@@ -4,6 +4,16 @@ import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { API_URL } from "@env";
 
+/**
+ * Affiche un formulaire pour modifier un produit.
+ * La modification est envoyée par une requête PUT à l'API.
+ * Si la modification est réussie, l'utilisateur est redirigé vers l'écran d'accueil.
+ * La page attend un paramètre "productId" qui correspond à l'identifiant du
+ * produit à modifier.
+ *
+ * @param {object} navigation - L'objet de navigation du component.
+ * @param {string} route.params.productId - L'identifiant du produit à modifier.
+ */
 const EditProduct = ({ navigation }) => {
   const route = useRoute();
   const [product, setProduct] = useState(null);
@@ -17,6 +27,14 @@ const EditProduct = ({ navigation }) => {
   const { productId } = route.params;
 
   useEffect(() => {
+    /**
+     * Récupère le produit correspondant à l'identifiant productId
+     * depuis l'API.
+     *
+     * @async
+     * @function
+     * @returns {Promise<void>}
+     */
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${API_URL}/items/${productId}`);
@@ -33,10 +51,25 @@ const EditProduct = ({ navigation }) => {
     fetchProducts();
   }, []);
 
+  /**
+   * Met à jour le champ correspondant dans l'objet productInput
+   * en fonction de la valeur passée en paramètre.
+   *
+   * @param {string} key - Le nom du champ à mettre à jour.
+   * @param {string|number} value - La nouvelle valeur du champ.
+   */
   const handleChange = (key, value) => {
     setProductInput({ ...productInput, [key]: value });
   };
 
+  /**
+   * Met à jour le produit correspondant à l'identifiant productId
+   * depuis l'API.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
   const updateProduct = async () => {
     try {
       const response = await axios.put(

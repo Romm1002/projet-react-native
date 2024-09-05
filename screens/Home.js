@@ -13,6 +13,13 @@ import axios from "axios";
 import { API_URL } from "@env";
 import { useFocusEffect } from "@react-navigation/native";
 
+/**
+ * Page d'accueil de l'application, affichant la liste des produits et
+ * permettant d'en ajouter de nouveaux, de les modifier ou de les supprimer.
+ *
+ * @param {object} navigation - Un objet de navigation fourni par React Navigation.
+ * @returns {React.Component} - La page d'accueil de l'application.
+ */
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,6 +27,13 @@ const HomeScreen = ({ navigation }) => {
   const [productToRestock, setProductToRestock] = useState(null);
   const [restockAmount, setRestockAmount] = useState("");
 
+  /**
+   * Récupère la liste des produits depuis l'API.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
   const fetchProducts = async () => {
     try {
       const response = await axios.get(API_URL + "/items");
@@ -37,6 +51,14 @@ const HomeScreen = ({ navigation }) => {
       fetchProducts();
     }, [])
   );
+  
+  /**
+   * Restock un produit de la liste.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
   const restockProduct = async () => {
     try {
       const response = await axios.put(
@@ -66,6 +88,12 @@ const HomeScreen = ({ navigation }) => {
       );
     }
   };
+
+  /**
+   * Filtre la liste des produits en fonction de la valeur de `searchQuery`.
+   *
+   * @returns {array} - La liste des produits filtrés.
+   */
   const filterProducts = () => {
     if (searchQuery === "") {
       return products;
@@ -75,6 +103,12 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
+  /**
+   * Render un produit de la liste.
+   *
+   * @param {{ item: object }} props - Les propriétés du produit à rendre.
+   * @returns {React.ReactElement} - Le JSX du produit.
+   */
   const renderProductItem = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
