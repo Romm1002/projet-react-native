@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import axios from "axios";
+import { API_URL } from "@env";
 
 export default function AddProduct({ navigation }) {
   const [name, setName] = useState("");
@@ -18,7 +19,7 @@ export default function AddProduct({ navigation }) {
       };
 
       try {
-        await axios.post('http://192.168.1.102:5000/items', newProduct);
+        await axios.post(API_URL + "/items", newProduct);
 
         setName("");
         setDescription("");

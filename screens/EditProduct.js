@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
+import { API_URL } from "@env";
 
 const EditProduct = ({ navigation }) => {
   const route = useRoute();
@@ -18,9 +19,7 @@ const EditProduct = ({ navigation }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          "http://192.168.1.20:5000/items/" + productId
-        );
+        const response = await axios.get(`${API_URL}/items/${productId}`);
         setProduct(response.data);
         setProductInput(response.data);
       } catch (error) {
@@ -41,7 +40,7 @@ const EditProduct = ({ navigation }) => {
   const updateProduct = async () => {
     try {
       const response = await axios.put(
-        "http://192.168.1.20:5000/items/" + productId,
+        `${API_URL}/items/${productId}`,
         bookInput
       );
       setBook(response.data);
