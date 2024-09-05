@@ -18,9 +18,9 @@ items = [
 
         'description': 'L\'iPhone 15 Pro est le premier iPhone avec un design en titane de qualité aérospatiale', 
 
-        'quantity': 1943, 
+        'quantity': '1943', 
 
-        'price': 10, 
+        'price': '10', 
 
     }, 
     { 
@@ -31,9 +31,9 @@ items = [
 
         'description': 'La texture moelleuse des grains de riz fins et longs du basmati offre à votre palais une expérience totalement différente en termes de saveurs et de sensations', 
 
-        'quantity': 4, 
+        'quantity': '4', 
 
-        'price': 120, 
+        'price': '120', 
 
     }, 
     { 
@@ -44,9 +44,9 @@ items = [
 
         'description': 'Crème Glacée Vanille avec des Morceaux de Pâte à Cookie aux Pépites de Chocolat et des inclusions cacaotées', 
 
-        'quantity': 150, 
+        'quantity': '150', 
 
-        'price': 1499, 
+        'price': '1499', 
 
     }, 
 
