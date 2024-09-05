@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AddProduct from "./screens/AddProduct";
 import EditProduct from "./screens/EditProduct";
 import DetailsProduct from "./screens/DetailsProduct";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/Home";
 
 const Stack = createStackNavigator();
 
@@ -13,7 +13,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="AddProduct"
+        initialRouteName="Home"
         screenOptions={{ headerShown: true }}
       >
 
