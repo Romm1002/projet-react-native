@@ -19,7 +19,6 @@ const EditProduct = ({ navigation }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-
         const response = await axios.get(`${API_URL}/items/${productId}`);
         setProduct(response.data);
         setProductInput(response.data);
