@@ -3,6 +3,15 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 
+/**
+ * Affiche les détails d'un produit.
+ * La page attend un paramètre "productId" qui correspond à l'identifiant du
+ * produit à afficher.
+ *
+ * @param {object} navigation - L'objet de navigation du component.
+ * @param {object} route - L'objet de route du component.
+ * @param {string} route.params.productId - L'identifiant du produit à afficher.
+ */
 const DetailsProduct = ({ route, navigation }) => {
   const { productId } = route.params;
 
@@ -15,6 +24,17 @@ const DetailsProduct = ({ route, navigation }) => {
     price: "",
   });
 
+<<<<<<< HEAD
+=======
+ /**
+   * Supprime un produit de la base de données.
+   *
+   * @async
+   * @function
+   * @param {number} productId - L'ID du produit à supprimer.
+   * @returns {Promise<void>}
+   */
+>>>>>>> ed34393f523f64b5252cc0d9f26bd19c414d2f87
   const confirmDelete = (productId) => {
     Alert.alert(
       "Confirmation",
@@ -24,9 +44,31 @@ const DetailsProduct = ({ route, navigation }) => {
         { text: "Supprimer", onPress: () => deleteProduct(productId) },
       ]
     );
+<<<<<<< HEAD
+=======
+ 
+  const deleteProduct = async (productId) => {
+    try {
+      await axios.delete(`${API_URL}/items/${productId}`);
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log(
+        "Une erreur est survenue lors de la suppression du produit",
+        error
+      );
+    }
+>>>>>>> ed34393f523f64b5252cc0d9f26bd19c414d2f87
   };
 
   useEffect(() => {
+  /**
+   * Récupère le produit correspondant à l'identifiant productId
+   * depuis l'API.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`${API_URL}/items/${productId}`);
