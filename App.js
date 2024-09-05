@@ -4,8 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AddProduct from "./screens/AddProduct";
 import EditProduct from "./screens/EditProduct";
 import DetailsProduct from "./screens/DetailsProduct";
+import HomeScreen from "./screens/HomeScreen";
 
 const Stack = createStackNavigator();
+
 
 const App = () => {
   return (
@@ -31,6 +33,12 @@ const App = () => {
           name="DetailsProduct"
           component={DetailsProduct}
           options={{ title: "Détails d'un produit" }}
+        />
+
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Écran d'Accueil" }}
         />
 
       </Stack.Navigator>
