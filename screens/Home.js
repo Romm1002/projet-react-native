@@ -3,12 +3,11 @@ import {
   View,
   Text,
   FlatList,
-  Image,
   Button,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   TextInput,
+  Modal,
 } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
@@ -24,6 +23,9 @@ import { useFocusEffect } from "@react-navigation/native";
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [restockModalVisible, setRestockModalVisible] = useState(false);
+  const [productToRestock, setProductToRestock] = useState(null);
+  const [restockAmount, setRestockAmount] = useState("");
 
   /**
    * Récupère la liste des produits depuis l'API.
@@ -37,7 +39,10 @@ const HomeScreen = ({ navigation }) => {
       const response = await axios.get(API_URL + "/items");
       setProducts(response.data);
     } catch (error) {
-      console.log("Une erreur est survenue lors de la récupération des produits", error);
+      console.log(
+        "Une erreur est survenue lors de la récupération des produits",
+        error
+      );
     }
   };
 
@@ -46,40 +51,39 @@ const HomeScreen = ({ navigation }) => {
       fetchProducts();
     }, [])
   );
-
+  
   /**
-   * Demande une confirmation avant de supprimer un produit.
-   *
-   * @param {number} productId - L'ID du produit à supprimer.
-   * @returns {void}
-   */
-  const confirmDelete = (productId) => {
-    Alert.alert(
-      "Confirmation",
-      "Êtes-vous sûr de vouloir supprimer ce produit?",
-      [
-        { text: "Annuler", style: "cancel" },
-        { text: "Supprimer", onPress: () => deleteProduct(productId) },
-      ]
-    );
-  };
-
-  /**
-   * Supprime un produit de la liste.
+   * Restock un produit de la liste.
    *
    * @async
    * @function
-   * @param {number} productId - L'ID du produit à supprimer.
    * @returns {Promise<void>}
    */
-  const deleteProduct = async (productId) => {
+  const restockProduct = async () => {
     try {
-      await axios.delete(`${API_URL}/items/${productId}`);
-      const updatedProducts = products.filter((product) => product.id !== productId);
-      setProducts(updatedProducts);
+      const response = await axios.put(
+        `${API_URL}/items/${productToRestock.id}`,
+        {
+          ...productToRestock,
+          quantity: (
+            parseInt(productToRestock.quantity) + parseInt(restockAmount)
+          ).toString(),
+        }
+      );
+      setProducts(
+        products.map((product) => {
+          if (product.id === productToRestock) {
+            return response.data;
+          }
+          return product;
+        })
+      );
+      setRestockModalVisible(false);
+      setRestockAmount("");
+      setProductToRestock(null);
     } catch (error) {
       console.log(
-        "Une erreur est survenue lors de la suppression du produit",
+        "Une erreur est survenue lors du réaprovisionnement du produit",
         error
       );
     }
@@ -113,21 +117,21 @@ const HomeScreen = ({ navigation }) => {
       style={styles.productItemButton}
     >
       <View style={styles.productItem}>
-        <Image source={{ uri: item.image }} style={styles.image} />
         <View style={styles.productDetails}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.description}>{item.description}</Text>
           <Text style={styles.price}>{item.price} €</Text>
+          {item.quantity <= 10 && (
+            <Text style={styles.danger}>Quantité basse</Text>
+          )}
           <View style={styles.buttons}>
             <Button
-              title="Modifier"
-              onPress={() =>
-                navigation.navigate("EditProduct", {
-                  productId: item.id,
-                })
-              }
+              title="Réaprovisionner"
+              onPress={() => {
+                setRestockModalVisible(true);
+                setProductToRestock(item);
+              }}
             />
-            <Button title="Supprimer" onPress={() => confirmDelete(item.id)} />
           </View>
         </View>
       </View>
@@ -142,10 +146,47 @@ const HomeScreen = ({ navigation }) => {
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={restockModalVisible}
+        onRequestClose={() => {
+          setRestockModalVisible(!restockModalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Quantité à réaprovisionner</Text>
+            <TextInput
+              style={styles.searchBar}
+              placeholder="Quantité"
+              value={restockAmount.toString()}
+              onChangeText={setRestockAmount}
+            />
+            <View style={styles.buttons}>
+              <Button
+                style={styles.button}
+                onPress={restockProduct}
+                title="Confirmer"
+              />
+              <Button
+                style={styles.button}
+                onPress={() => {
+                  setRestockModalVisible(!restockModalVisible);
+                  setRestockAmount("");
+                  setProductToRestock(null);
+                }}
+                title="Annuler"
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
       <FlatList
         data={filterProducts()}
         renderItem={renderProductItem}
         keyExtractor={(item) => item.id.toString()}
+        extraData={products}
       />
       <Button
         title="Ajouter un produit"
@@ -175,11 +216,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
-  image: {
-    width: 60,
-    height: 60,
-    marginRight: 16,
-  },
   productDetails: {
     flex: 1,
     justifyContent: "center",
@@ -198,8 +234,14 @@ const styles = StyleSheet.create({
     color: "#333",
     marginBottom: 8,
   },
+  danger: {
+    fontSize: 14,
+    color: "#c91414",
+    marginBottom: 8,
+  },
   buttons: {
-    flexDirection: "row",
+    width: "100%",
+    flexDirection: "row-reverse",
     justifyContent: "space-between",
   },
   addButton: {
@@ -212,6 +254,54 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    marginBottom: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 25,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 

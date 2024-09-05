@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 
@@ -24,7 +24,7 @@ const DetailsProduct = ({ route, navigation }) => {
     price: "",
   });
 
-  /**
+ /**
    * Supprime un produit de la base de données.
    *
    * @async
@@ -32,6 +32,16 @@ const DetailsProduct = ({ route, navigation }) => {
    * @param {number} productId - L'ID du produit à supprimer.
    * @returns {Promise<void>}
    */
+  const confirmDelete = (productId) => {
+    Alert.alert(
+      "Confirmation",
+      "Êtes-vous sûr de vouloir supprimer ce produit?",
+      [
+        { text: "Annuler", style: "cancel" },
+        { text: "Supprimer", onPress: () => deleteProduct(productId) },
+      ]
+    );
+ 
   const deleteProduct = async (productId) => {
     try {
       await axios.delete(`${API_URL}/items/${productId}`);
@@ -81,12 +91,15 @@ const DetailsProduct = ({ route, navigation }) => {
       <Text style={styles.author}>Quantité: {productInput.quantity}</Text>
       <Text style={styles.year}>Prix: {productInput.price}</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EditProduct', { productId })}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("EditProduct", { productId })}
+        >
           <Text style={styles.buttonText}>Modifier</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => deleteProduct(productId)}
+          onPress={() => confirmDelete(productId)}
         >
           <Text style={styles.buttonText}>Supprimer</Text>
         </TouchableOpacity>
