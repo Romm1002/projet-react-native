@@ -19,7 +19,7 @@ const EditProduct = ({ navigation }) => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.20:5000/items/" + productId
+          "http://192.168.1.102:5000/items/" + productId
         );
         setProduct(response.data);
         setProductInput(response.data);
@@ -41,10 +41,11 @@ const EditProduct = ({ navigation }) => {
   const updateProduct = async () => {
     try {
       const response = await axios.put(
-        "http://192.168.1.20:5000/items/" + productId,
-        bookInput
+        "http://192.168.1.102:5000/items/" + productId,
+        productInput
       );
-      setBook(response.data);
+      setProduct(response.data);
+      navigation.goBack();
     } catch (error) {
       console.log(
         "Une erreur est survenue lors de la mise a jour du produit",

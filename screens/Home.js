@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,23 +11,26 @@ import {
   TextInput,
 } from "react-native";
 import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('http://192.168.1.19:5000/items');
-        setProducts(response.data);
-      } catch (error) {
-        console.log("Une erreur est survenue lors de la récupération des produits", error);
-      }
-    };
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://192.168.1.102:5000/items');
+      setProducts(response.data);
+    } catch (error) {
+      console.log("Une erreur est survenue lors de la récupération des produits", error);
+    }
+  };
 
-    fetchProducts();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+    }, [])
+  );
 
   const confirmDelete = (productId) => {
     Alert.alert(
@@ -42,7 +45,7 @@ const HomeScreen = ({ navigation }) => {
 
   const deleteProduct = async (productId) => {
     try {
-      await axios.delete(`http://192.168.1.19:5000/items/${productId}`);
+      await axios.delete(`http://192.168.1.102:5000/items/${productId}`);
       const updatedProducts = products.filter((product) => product.id !== productId);
       setProducts(updatedProducts);
     } catch (error) {
