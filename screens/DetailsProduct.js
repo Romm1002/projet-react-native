@@ -24,9 +24,7 @@ const DetailsProduct = ({ route, navigation }) => {
     price: "",
   });
 
-<<<<<<< HEAD
-=======
- /**
+  /**
    * Supprime un produit de la base de données.
    *
    * @async
@@ -34,7 +32,6 @@ const DetailsProduct = ({ route, navigation }) => {
    * @param {number} productId - L'ID du produit à supprimer.
    * @returns {Promise<void>}
    */
->>>>>>> ed34393f523f64b5252cc0d9f26bd19c414d2f87
   const confirmDelete = (productId) => {
     Alert.alert(
       "Confirmation",
@@ -44,9 +41,7 @@ const DetailsProduct = ({ route, navigation }) => {
         { text: "Supprimer", onPress: () => deleteProduct(productId) },
       ]
     );
-<<<<<<< HEAD
-=======
- 
+  };
   const deleteProduct = async (productId) => {
     try {
       await axios.delete(`${API_URL}/items/${productId}`);
@@ -57,18 +52,17 @@ const DetailsProduct = ({ route, navigation }) => {
         error
       );
     }
->>>>>>> ed34393f523f64b5252cc0d9f26bd19c414d2f87
   };
 
   useEffect(() => {
-  /**
-   * Récupère le produit correspondant à l'identifiant productId
-   * depuis l'API.
-   *
-   * @async
-   * @function
-   * @returns {Promise<void>}
-   */
+    /**
+     * Récupère le produit correspondant à l'identifiant productId
+     * depuis l'API.
+     *
+     * @async
+     * @function
+     * @returns {Promise<void>}
+     */
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`${API_URL}/items/${productId}`);
