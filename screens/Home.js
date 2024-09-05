@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,26 +12,26 @@ import {
 } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(API_URL + "/items");
-        setProducts(response.data);
-      } catch (error) {
-        console.log(
-          "Une erreur est survenue lors de la récupération des produits",
-          error
-        );
-      }
-    };
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(API_URL + "/items");
+      setProducts(response.data);
+    } catch (error) {
+      console.log("Une erreur est survenue lors de la récupération des produits", error);
+    }
+  };
 
-    fetchProducts();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+    }, [])
+  );
 
   const confirmDelete = (productId) => {
     Alert.alert(
@@ -47,9 +47,7 @@ const HomeScreen = ({ navigation }) => {
   const deleteProduct = async (productId) => {
     try {
       await axios.delete(`${API_URL}/items/${productId}`);
-      const updatedProducts = products.filter(
-        (product) => product.id !== productId
-      );
+      const updatedProducts = products.filter((product) => product.id !== productId);
       setProducts(updatedProducts);
     } catch (error) {
       console.log(

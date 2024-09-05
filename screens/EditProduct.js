@@ -19,6 +19,7 @@ const EditProduct = ({ navigation }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+
         const response = await axios.get(`${API_URL}/items/${productId}`);
         setProduct(response.data);
         setProductInput(response.data);
@@ -41,9 +42,10 @@ const EditProduct = ({ navigation }) => {
     try {
       const response = await axios.put(
         `${API_URL}/items/${productId}`,
-        bookInput
+        productInput
       );
-      setBook(response.data);
+      setProduct(response.data);
+      navigation.goBack();
     } catch (error) {
       console.log(
         "Une erreur est survenue lors de la mise a jour du produit",

@@ -56,10 +56,7 @@ const DetailsProduct = ({ route, navigation }) => {
       <Text style={styles.author}>Quantité: {productInput.quantity}</Text>
       <Text style={styles.year}>Prix: {productInput.price}</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("UpdateBook", { bookId })}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EditProduct', { productId })}>
           <Text style={styles.buttonText}>Modifier</Text>
         </TouchableOpacity>
         <TouchableOpacity
